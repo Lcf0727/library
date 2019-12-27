@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+
+    <!-- 扫描类包，将标注Spring注解的类自动转化为Bean，同时完成Bean的注入  -->
+    <context:component-scan base-package="com.library.dao"/>
+    <context:component-scan base-package="com.library.service"/>
+    <context:property-placeholder location="classpath*:db.properties"/>
+    <!--  定义一个使用DBCP实现的数据源 -->
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+        <property name="driverClassName" value="${jdbc.driver}"/>
+        <!-- url -->
+        <property name="url" value="${jdbc.url}"/>
+        <!-- 用户名 -->
+        <property name="username" value="${jdbc.username}"/>
+        <!-- 密码 -->
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+    
+    <bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg index="0" ref="sqlSessionFactory"/>
+    </bean>
+    
+    <bean id="sqlSessionFactory"
+		class="org.mybatis.spring.SqlSessionFactoryBean">
+		<!-- 3.1.指定mybatis核心配置文件的位置 -->
+		<!-- 3.2.配置连接池(数据源) ref指向连接池bean对象的id值 -->
+		<property name="dataSource" ref="dataSource"></property>
+		<!-- 3.3、扫描所有的 XxxMapper.xml映射文件，读取其中配置的SQL语句 -->
+		<property name="mapperLocations"
+			value="classpath:mapper/*.xml" />
+	</bean>
+	<!-- 4、定义mapper接口扫描器 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<!-- 扫描所有XxxMapper接口，将接口实例的创建交给spring容器 -->
+		<property name="basePackage" value="com.library.dao" />
+	</bean>
+</beans>
