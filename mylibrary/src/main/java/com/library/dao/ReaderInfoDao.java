@@ -18,4 +18,6 @@ public interface ReaderInfoDao {
     public int editReaderCard(@Param("readerInfo")final ReaderInfo readerInfo);
 
     public long addReaderInfo(@Param("readerInfo")final ReaderInfo readerInfo);
+
+	public long getReaderId(@Param("readerInfo")final ReaderInfo readerInfo);
 }

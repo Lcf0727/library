@@ -103,7 +103,8 @@ public class ReaderController {
     @RequestMapping("reader_add_do.html")
     public String readerInfoAddDo(String name, String sex, String birth, String address, String phone, String password, RedirectAttributes redirectAttributes) {
         ReaderInfo readerInfo = getReaderInfo(0, name, sex, birth, address, phone);
-        long readerId = readerInfoService.addReaderInfo(readerInfo);
+        readerInfoService.addReaderInfo(readerInfo);
+        long readerId = readerInfoService.getReaderId(readerInfo);
         readerInfo.setReaderId(readerId);
         if (readerId > 0 && readerCardService.addReaderCard(readerInfo, password)) {
             redirectAttributes.addFlashAttribute("succ", "添加学生信息成功！");
